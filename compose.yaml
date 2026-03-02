@@ -1,0 +1,43 @@
+version: "3.8"
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: dockerfile.frontend
+    container_name: frontend
+    env_file:
+      - .env
+    ports:
+      - 8080:8000
+    networks:
+      - backend_network
+    command: >
+     sh -c "/venv/bin/python manage.py migrate &&
+      /venv/bin/python manage.py collectstatic --noinput && 
+      bash build.sh&&  
+      /venv/bin/python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      backend : 
+        condition: service_healthy
+
+    
+  backend:
+    image: postgres:16
+    env_file:
+      - .env
+    container_name: backend
+    
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/
+    networks:
+      - backend_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  backend_network:
+    driver: bridge
+

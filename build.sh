@@ -1,36 +1,39 @@
 #!/usr/bin/env bash
 set -e
 
-echo "Running migrations..."
-python manage.py migrate
+# echo "Running migrations..."
+# sudo apt-get update && sudo apt-get install -y python3-pip
+# sudo pip3 install -r requirements.txt
+# python3 manage.py migrate
 
-echo "Collecting static files..."
-python manage.py collectstatic --noinput
+# echo "Collecting static files..."
+# python3 manage.py collectstatic --noinput
 
-echo "Creating superuser if not exists..."
-python manage.py shell << 'EOF'
+# echo "Creating superuser if not exists..."
+#!/usr/bin/env bash
+
+/venv/bin/python - <<EOF
 import os
-from django.contrib.auth import get_user_model
+import django
 
+# IMPORTANT: Set your settings module
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ngo_project.settings")
+
+# Load Django
+django.setup()
+
+from django.contrib.auth import get_user_model
 User = get_user_model()
 
-username = os.environ.get("DJANGO_SUPERUSER_USERNAME")
-email = os.environ.get("DJANGO_SUPERUSER_EMAIL")
-password = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
+u = os.environ.get("DJANGO_SUPERUSER_USERNAME")
+e = os.environ.get("DJANGO_SUPERUSER_EMAIL")
+p = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
 
-if username and password:
-    if not User.objects.filter(username=username).exists():
-        User.objects.create_superuser(
-            username=username,
-            email=email,
-            password=password
-        )
-        print("Superuser created")
-    else:
-        print("Superuser already exists")
+if u and not User.objects.filter(username=u).exists():
+    print("Creating superuser:", u)
+    User.objects.create_superuser(u, e, p)
 else:
-    print("Superuser env vars not set")
+    print("Superuser exists or env vars missing.")
 EOF
 
-echo "Starting Gunicorn..."
-exec gunicorn ngo_project.wsgi:application
+# /venv/bin/gunicorn ngo_project.wsgi:application --bind 0.0.0.0:8000
