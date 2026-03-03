@@ -19,7 +19,7 @@ RUN /venv/bin/pip install --upgrade pip && \
     /venv/bin/pip install -r requirements.txt && \
     /venv/bin/python manage.py migrate && \
     /venv/bin/python manage.py collectstatic --noinput && \
-    bash build.sh&& 
+    bash build.sh 
 
 
 
