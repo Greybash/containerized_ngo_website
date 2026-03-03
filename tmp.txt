@@ -1,0 +1,5 @@
+#DB_NAME=evergreenvillages
+# DB_USER=postgres
+# DB_PASSWORD=password
+# DB_HOST=backend   
+# DB_PORT=5432
