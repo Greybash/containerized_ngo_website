@@ -16,7 +16,7 @@ RUN python3 -m venv /venv
 
 
 RUN /venv/bin/pip install --upgrade pip && \
-    /venv/bin/pip install -r requirements.txt &&
+    /venv/bin/pip install -r requirements.txt 
 
 
 # EXPOSE 8000
