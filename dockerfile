@@ -16,13 +16,14 @@ RUN python3 -m venv /venv
 
 
 RUN /venv/bin/pip install --upgrade pip && \
-    /venv/bin/pip install -r requirements.txt && \
-    /venv/bin/python manage.py migrate && \
-    /venv/bin/python manage.py collectstatic --noinput && \
-    bash build.sh 
-
+    /venv/bin/pip install -r requirements.txt &&
 
 
 # EXPOSE 8000
 
-CMD ["/venv/bin/python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["/bin/bash", "-c", "\
+    /venv/bin/python manage.py migrate && \
+    /venv/bin/python manage.py collectstatic --noinput && \
+    bash build.sh && \
+    /venv/bin/python manage.py runserver 0.0.0.0:8000 \
+"]
