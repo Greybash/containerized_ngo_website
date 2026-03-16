@@ -17,11 +17,7 @@ SECRET_KEY = config(
 )
 
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "13.204.157.54",
-]
+ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = [
     'https://*.onrender.com',
 ]
